@@ -9,7 +9,7 @@ tagalogWords = []
 statement = "an darting ang mga salta"
 statement = removePunctuation(statement).lower()
 
-maxEdit = 1
+maxEdit = 10
 directory = "./DFA_Graph"
 
 # remove the DFA_Graph Folder
@@ -27,7 +27,7 @@ for word in statement.split():
     states = {}
     transitions = []
     matching = []
-    lev = DFA(removeAdjacentLetters(word), 1)
+    lev = DFA(removeAdjacentLetters(word), maxEdit)
     # Generate the initial state
     levState = lev.start()
 
