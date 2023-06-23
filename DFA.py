@@ -4,16 +4,16 @@ class DFA:
         self.max_edits = n
 
     def start(self):
-        return range(self.max_edits + 1), range(self.max_edits + 1)
+        return tuple(range(self.max_edits + 1)), tuple(range(self.max_edits + 1))
 
     def step(self, tuple_arg, c):
         indices, values = tuple_arg  # Unpack the tuple within the function
         if indices and indices[0] == 0 and values[0] < self.max_edits:
-            new_indices = [0]
-            new_values = [values[0] + 1]
+            new_indices = (0,)
+            new_values = (values[0] + 1,)
         else:
-            new_indices = []
-            new_values = []
+            new_indices = ()
+            new_values = ()
 
         for j, i in enumerate(indices):
             if i == len(self.string):
@@ -25,8 +25,8 @@ class DFA:
             if j + 1 < len(indices) and indices[j + 1] == i + 1:
                 val = min(val, values[j + 1] + 1)
             if val <= self.max_edits:
-                new_indices.append(i + 1)
-                new_values.append(val)
+                new_indices += (i + 1,)
+                new_values += (val,)
 
         return new_indices, new_values
 

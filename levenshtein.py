@@ -1,19 +1,21 @@
 import csv
-import os
 import shutil
-from helper import removePunctuation, removeAdjacentLetters
+from helper import removePunctuation, removeAdjacentLetters, writeGraphs, count_transitions, writeMinimizedGraphs
 from DFA import DFA
+from hopcroft import hopcroft
 
 suggestedWords = []
 tagalogWords = []
-statement = "an darting ang mga salta"
+statement = "An darting ang mga salta"
 statement = removePunctuation(statement).lower()
 
-maxEdit = 10
+maxEdit = 1
 directory = "./DFA_Graph"
+minimizedDirectory = "./MIN_DFA_Graph"
 
 # remove the DFA_Graph Folder
 shutil.rmtree(directory, ignore_errors=True)
+shutil.rmtree(minimizedDirectory, ignore_errors=True)
 
 # source: https://github.com/raymelon/tagalog-dictionary-scraper
 with open('./tagalog_dict.csv', 'r') as file:
@@ -30,6 +32,9 @@ for word in statement.split():
     lev = DFA(removeAdjacentLetters(word), maxEdit)
     # Generate the initial state
     levState = lev.start()
+
+    # minimized DFA using Hopcroft's Algorithm
+    minimized_states, minimized_transitions, minimized_matching = hopcroft(lev)
 
 
     def explore(state):
@@ -62,28 +67,40 @@ for word in statement.split():
             if word != tagalogWord and len(tagalogWord) >= len(word):
                 suggestedWords.append(tagalogWord)
 
-    print("----------------------------------------------")
+    print("--RESULTS-------------------------------------")
     transitions.sort(key=lambda x: x[0])
 
-    # output to graphviz
-    filename = removeAdjacentLetters(word) + ".dot"
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    file_path = os.path.join(directory, filename)
-
-    f = open(file_path, "w")
-    f.write("digraph G {")
-    for t in transitions:
-        f.write('\n\t%s -> %s [label=" %s "]' % t)
-    for i in matching:
-        f.write('\n\t%s [style=filled]' % i)
-    f.write("\n}")
+    # graphviz utilization
+    writeGraphs(word, transitions, matching, directory, maxEdit)
+    writeMinimizedGraphs(word, minimized_transitions, minimized_matching, minimizedDirectory, maxEdit)
 
     if len(suggestedWords) != 0:
-        print(f"Suggested Words for '{word}': ", suggestedWords)
+        # print(f"Suggested Words for '{word}': ", suggestedWords)
+        print(f"'{len(suggestedWords)}' Suggested Words for '{word}': ")
     else:
         print(f"No Suggested Words for '{word}'")
-    print("Number of States: ", counter)
-    print("Number of Transitions", len(transitions))
-    print("Number of Accepting States", len(matching))
-    print("----------------------------------------------")
+    print("Number of States: from ", counter, "to", len(minimized_states))
+    print("Number of Transitions: from ", len(transitions), "to", count_transitions(minimized_transitions))
+    print("Number of Accepting States: from ", len(matching), "to", len(minimized_matching))
+    print("--------------- Suggested Words --------------")
+    max_width = 45
+    current_width = 0
+
+    for word in suggestedWords:
+        if current_width + len(word) + 1 <= max_width:
+            print(word, end=", ")
+            current_width += len(word) + 2  # Adding 2 for the word and comma
+        else:
+            print()
+            print(word, end=", ")
+            current_width = len(word) + 2  # Adding 2 for the word and comma
+
+    print()
+    print("-------------------- END ---------------------")
+
+
+
+
+
+
+
