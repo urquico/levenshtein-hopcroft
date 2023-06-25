@@ -1,6 +1,5 @@
 import csv
-from helper import removePunctuation, removeAdjacentLetters, get_unique_states, convert_transitions, \
-    convert_matching_states
+from helper import removePunctuation, removeAdjacentLetters, get_unique_states, convert_transitions, convert_matching_states
 from MinimizedDFA import MinimizedDFA
 from DFA import DFA
 from hopcroft import hopcroft
