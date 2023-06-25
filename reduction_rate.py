@@ -9,10 +9,14 @@ totalReductionRate_states = 0
 totalReductionRate_transitions = 0
 
 # source: https://github.com/raymelon/tagalog-dictionary-scraper
-with open('./tagalog_dict.csv', 'r') as file:
+with open('./tagalog_dict.csv', 'r',  encoding="utf8") as file:
     csvReader = csv.reader(file)
     for row in csvReader:
-        tagalogWords.append(row[0].lower())  # appending the rows of the csv file into tagalogWords variable
+        if len(row) > 0:  # Check if the row has at least one element
+            tagalogWords.append(row[0].lower())
+        else:
+            # Handle the case where the row is empty or doesn't have the expected structure
+            print("Invalid row:", row)
 
 uniqueCharacters = set(''.join(tagalogWords))
 
@@ -55,6 +59,7 @@ for word in tagalogWords:
     reductionRateTransitions = (len(transitions) - len(minimized_transitions)) / len(transitions) * 100
     totalReductionRate_states += reductionRateStates
     totalReductionRate_transitions += reductionRateTransitions
+    print(word, reductionRateStates, reductionRateTransitions)
 
 print("n = ", len(tagalogWords))
 print("k = ", maxEdit)
