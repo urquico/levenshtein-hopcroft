@@ -75,3 +75,37 @@ def writeMinimizedGraphs(word, transitions, matching, directory, k):
     file_path = os.path.join(directory, filename)
     f = open(file_path, "w")
     f.write(dot_script)
+
+def get_unique_states(states):
+    unique_states = set()
+
+    for state in states:
+        unique_states.add(state_mapping[state])
+
+    return unique_states
+
+state_mapping = {}
+def convert_transitions(transitions):
+    converted_transitions = {}
+
+    counter = 1
+
+    for source_state, actions in transitions.items():
+        source_state_str = state_mapping.setdefault(source_state, counter)
+        counter += 1
+        converted_transitions[source_state_str] = {}
+
+        for action, next_state in actions.items():
+            next_state_str = state_mapping.setdefault(next_state, counter)
+            counter += 1
+            converted_transitions[source_state_str][action] = next_state_str
+
+    return converted_transitions
+
+def convert_matching_states(matching_states):
+    unique_states = set()
+    for state in matching_states:
+        unique_states.add(state_mapping[state])
+    return unique_states
+
+

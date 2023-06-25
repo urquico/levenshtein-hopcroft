@@ -1,10 +1,9 @@
 import csv
-from helper import count_transitions
 from DFA import DFA
 from hopcroft import hopcroft
 
 tagalogWords = []
-maxEdit = 10
+maxEdit = 1
 uniqueCharacters = {}
 totalReductionRate_states = 0
 totalReductionRate_transitions = 0
