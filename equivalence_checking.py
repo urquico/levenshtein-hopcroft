@@ -29,15 +29,8 @@ for word in statement.split():
     converted_transitions = convert_transitions(minimized_transitions)
     converted_states = get_unique_states(minimized_states)
     converted_matching = convert_matching_states(minimized_matching)
-    # print(len(minimized_transitions), convert_transitions(minimized_transitions))
-    # print(len(minimized_states), get_unique_states(minimized_states))
-    # print(len(minimized_matching), convert_matching_states(minimized_matching))
-    minimized_dfa = MinimizedDFA(converted_states, converted_transitions, converted_matching)
-    # print(converted_states)
-    # print(converted_transitions)
-    # print(converted_matching)
-    # print(initial_state)
 
+    minimized_dfa = MinimizedDFA(converted_states, converted_transitions, converted_matching)
     suggestedWords = []
 
     for tagalogWord in tagalogWords:
@@ -72,8 +65,8 @@ for word in statement.split():
     print("----------------------------------------------")
 
     current_width = 0
-    print(len(suggestedWords))
-    for word in suggestedWords:
+    print(len(min_suggestedWords))
+    for word in min_suggestedWords:
         if current_width + len(word) + 1 <= max_width:
             print(word, end=", ")
             current_width += len(word) + 2  # Adding 2 for the word and comma
